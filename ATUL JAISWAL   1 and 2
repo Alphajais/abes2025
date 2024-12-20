@@ -29,75 +29,63 @@ int main() {
 }
 /////////////////
 2->
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+#include <iostream>
+#include <vector>
+#include <algorithm>
 
-public class Main {
+using namespace std;
 
-    private static boolean isPrime(int number) {
-        if (number <= 1)
+vector<int> rearrangeArray(vector<int>& nums) {
+    int largestPrime = -1, smallestPrime = -1;
+    for (int num : nums) {
+        if (isPrime(num)) {
+            largestPrime = max(largestPrime, num);
+            smallestPrime = min(smallestPrime, num);
+        }
+    }
+    vector<int> remainingNums;
+    for (int num : nums) {
+        if (num != largestPrime && num != smallestPrime) {
+            remainingNums.push_back(num);
+        }
+    }
+    sort(remainingNums.begin(), remainingNums.end(), greater<int>());
+    vector<int> result;
+    result.push_back(largestPrime);
+    for (int num : remainingNums) {
+        result.push_back(num);
+    }
+    result.push_back(smallestPrime);
+
+    return result;
+}
+bool isPrime(int num) {
+    if (num <= 1) {
+        return false;
+    }
+    for (int i = 2; i * i <= num; ++i) {
+        if (num % i == 0) {
             return false;
-        for (int i = 2; i <= Math.sqrt(number); i++) {
-            if (number % i == 0)
-                return false;
         }
-        return true;
     }
-
-    public static int[] formatArray(int[] array) {
-        List<Integer> primes = new ArrayList<>();
-        List<Integer> nonPrimes = new ArrayList<>();
-
-        for (int num : array) {
-            if (isPrime(num)) {
-                primes.add(num);
-            } else {
-                nonPrimes.add(num);
-            }
-        }
-
-        Collections.sort(primes);
-
-        nonPrimes.sort(Collections.reverseOrder());
-
-        int[] result = new int[array.length];
-        int index = 0;
-
-        if (!primes.isEmpty()) {
-            result[index++] = primes.get(primes.size() - 1);
-            primes.remove(primes.size() - 1);
-        }
-
-        for (int num : nonPrimes) {
-            result[index++] = num;
-        }
-
-        if (!primes.isEmpty()) {
-            result[result.length - 1] = primes.get(0);
-        }
-
-        return result;
-    }
-
-    public static void main(String[] args) {
-        int[] array1 = { 5, 1, 8, 11, 2 };
-        int[] array2 = { 1, 6, 4, 13, 9, 3 };
-
-        int[] output1 = formatArray(array1);
-        int[] output2 = formatArray(array2);
-
-        System.out.println("Output 1: ");
-        for (int num : output1) {
-            System.out.print(num + " ");
-        }
-        System.out.println();
-
-        System.out.println("Output 2: ");
-        for (int num : output2) {
-            System.out.print(num + " ");
-        }
-        System.out.println();
-    }
+    return true;
 }
 
+int main() {
+    vector<int> nums = {5, 1, 8, 11, 2};
+    vector<int> rearranged = rearrangeArray(nums);
+
+    cout << "Original array: ";
+    for (int num : nums) {
+        cout << num << " ";
+    }
+    cout << endl;
+
+    cout << "Rearranged array: ";
+    for (int num : rearranged) {
+        cout << num << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
